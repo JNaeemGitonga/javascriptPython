@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Appointments</title>
+        <meta name='description' content='
+            Appointments using a python back end and a javascript front.
+        '>
+        
+        <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous'>
+        <link rel = 'stylesheet'  type ='text/css' href='./main.css' />
+    </head>
+    <body>
+       
+            <nav class='welcome-nav navbar '>
+                    <h1 class='navbar-brand'>Make a Date</h1>
+                    
+                    <form class="form-inline" onsubmit='return false' >
+                        <input class="form-control mr-sm-2" id=search type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 bn1 " type="submit">Search</button>
+                    </form>
+                    <ul  class='navbar-nav'>
+                        <li class='nav-item'>
+                            <a class='nav-link active new_link' href='#newAppointment'> New</a>
+                        </li>
+                        
+                    </ul>
+                     
+                </nav>
+    
+        <div id='root'>
+            <!-- THIS IS WHERE I WILL FLY IN ALL MY HTML -->
+        </div>
+        <script
+            src='http://code.jquery.com/jquery-3.3.1.min.js'
+            integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8='
+            crossorigin='anonymous'
+        ></script>
+        <script src='./app.js'></script>
+    </body>
+</html>

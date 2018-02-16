@@ -1,0 +1,30 @@
+li {
+    margin:20px;
+}
+
+.bn1 {
+    color:black
+
+}
+
+.btn:focus {
+    outline:none !important;
+}
+
+.title {
+    float:right
+}
+
+.form-box {
+    margin:auto;
+    width:50%
+}
+
+.options {
+    display:inline;
+}
+
+.add_link {
+    font-size:30px;
+    color:green;
+}
