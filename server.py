@@ -21,7 +21,9 @@ class myHandler(BaseHTTPRequestHandler):
 			if self.path.endswith(".html"):
 				mimetype='text/html'
 				sendReply = True
-			
+			if self.path.endswith(".jpg"):
+                mimetype='image/jpg'
+                sendReply = True
 			if self.path.endswith(".js"):
 				mimetype='application/javascript'
 				sendReply = True
