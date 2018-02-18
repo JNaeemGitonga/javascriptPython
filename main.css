@@ -26,7 +26,6 @@ h1.navbar-brand {
 
 .bn1 {
     color:black
-
 }
 
 .btn:focus {
@@ -69,10 +68,14 @@ table.table {
     margin:auto;
 }
 
+div.table-div {
+    margin-bottom:50px;
+}
 
 .no-appts {
     text-align:center;
 }
+
 @media (max-width:425px) {
     h1.navbar-brand {
         font-size:15.2vw;

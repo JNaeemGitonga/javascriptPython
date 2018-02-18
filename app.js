@@ -13,26 +13,8 @@ $(function(){
     const $add = $('.add_link')
     const $li = $('li')
     
-    // let list = [['asdfd','time','wtf']]
-    let element = [];
-    // list.forEach((list, i) => {
-    //     // $('tbody').append(`<tr id='row-${i}'></tr>`)
-    //     list.map( item => {
-    //        element.push(`<td>${item}</td>`)
-    //     //    $(`#row-${i}`).append(`<td>${item}</td>`)
-    //     })
-
-         
-    // })
-
-    console.log([...element])
-    // $('tbody').append(`<tr>${element}</tr>`)
-    
-
-    let getAppointments = () => {
-
-        return $.get('/getallappts').then(res=> {
-            let data = JSON.parse(res)
+    let _handleTable = obj => {
+        let data = JSON.parse(obj)
             if(data.length === 0) {
                 let noApptMsg = `
                     <div class='no-appts'>                
@@ -44,17 +26,43 @@ $(function(){
             else {
                 $('tbody').empty()
                 data.forEach((list) => {
-                    let row = list.map( item => `<td>${item}</td>`)
+                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
                     $('tbody').append(`<tr>${row}</tr>`)
                 })
             }
+    }
+
+    let getAppointments = () => {
+
+        return $.get('/getallappts').then(res=> {
+            console.log(res)
+            let data = JSON.parse(res)
+
+            console.log(data)
+            if(res.length === 0) {
+                let noApptMsg = `
+                    <div class='no-appts'>                
+                        <p>No new appointments</p>
+                    </div>
+                `
+                $('.table-div').append(noApptMsg)
+            }
+            else {
+                $('tbody').empty()
+                data.forEach((list) => {
+                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+                    $('tbody').append(`<tr>${row}</tr>`)
+                })
+            }
+        }).catch(err => {
+            console.error(err)
         })
     }
     
     let getOneAppt = (appt) => {
         $.get(`/getone/:${appt}`).then(res => {
             let data = JSON.parse(res)
-            if(data.length === 0) {
+            if(res.length === 0) {
                 let noApptMsg = `
                     <div class='no-appts'>                
                         <p>No new appointments</p>
@@ -65,10 +73,12 @@ $(function(){
             else {
                 $('tbody').empty()
                 data.forEach((list) => {
-                    let row = list.map( item => `<td>${item}</td>`)
+                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
                     $('tbody').append(`<tr>${row}</tr>`)
                 })
             }
+        }).catch(err => {
+            console.error(err)
         })
     }
 
@@ -76,18 +86,18 @@ $(function(){
         e.preventDefault()
 
         let value = $search.val().trim()
-        console.log(value)
+        console.log(typeof value, value.length)
 
         if ($('div.form-box').hasClass('hidden')){
             $('div.table-div').removeClass('hidden')
-            return true
         }
         else{
             $('div.form-box').addClass('hidden')
             $('div.table-div').removeClass('hidden')
         }
 
-        if (value === ''){
+        if (value.length === 0){
+            console.log('doin it')
             getAppointments()
         }
         else {
@@ -112,7 +122,8 @@ $(function(){
                 $('.table-div').removeClass('hidden')
             }
 
-            if (value === '') {
+            if (value.length === 0) {
+                console.log('rockin')
                 getAppointments()
             }
             else {
@@ -122,18 +133,6 @@ $(function(){
         }
     })
 
-    // $li.on('click', '.add_link', function(){ 
-    //     if ($('div.table-div').hasClass('hidden')){
-    //         $('div.form-box').removeClass('hidden')
-    //     }
-    //     else {
-    //         $('div.table-div').addClass('hidden')
-    //         $('div.form-box').removeClass('hidden')
-    //     }
-    //     $('li.add').html(newLink)
-
-    // })
-    
     $li.on('click', '.new_link', function(){ 
         if ($('div.table-div').hasClass('hidden')){
             $('div.form-box').removeClass('hidden')
@@ -157,11 +156,12 @@ $(function(){
         }
        
         $.post('/send',newAppt,function(data){
-            console.log(JSON.parse(data))
             $('tbody').empty()
-            JSON.parse(data).forEach((list) => {
-                let row = list.map( item => `<td>${item}</td>`)
-                $('tbody').append(`<tr>${row}</tr>`)
+            let obj = JSON.parse(data)
+            console.log(obj)
+            obj.forEach((list) => {
+                let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+                $('tbody').append(`<tr>${newRow}</tr>`)
             })
 
         })

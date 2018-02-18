@@ -15,9 +15,9 @@ class myServer(BaseHTTPRequestHandler):
 		res = c.fetchall()
 		_json = json.dumps(res)
 		print 'This is res from _get_all_appts', res
-		print 'From line 24:  ', _json
-		_data = self.wfile.write(_json)
-		return _data
+		print 'From line 18:  ', _json
+		self.wfile.write(_json)
+		return 
 
 	def do_GET(self):
 		if self.path=="/":
