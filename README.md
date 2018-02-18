@@ -18,4 +18,5 @@ Small appointment app using javascript and python. It is my first time using pyt
 
 1. clone this repo to your local machine.
 2. `$ python server.py`
+3. in you browser go to `http://localhost:8080`
 

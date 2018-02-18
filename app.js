@@ -33,10 +33,7 @@ let apptTable = `
             <tr>
         </thead>
         <tbody>
-            
-            <tr class='rows'>
-
-            </tr>
+        
         </tbody>
     </table>
 `
@@ -62,9 +59,7 @@ $(function(){
         e.preventDefault()
         $search.val('');
         $root.empty().append(apptTable)
-        $.get('/api/appointments', data => {
-            console.log('ur get worked')
-        })
+        
     })
 
     $search.on('keydown', function(e){
@@ -96,7 +91,15 @@ $(function(){
             date:$('#time_input').val(),
             description:$('#description').val()
         }
-
+        $.ajax({
+            url:'/send',
+            method:'POST',
+            dataType: 'json',
+            data: newAppt
+        }).then(res => console.log(res))
+        // $.post('/send',newAppt,function(data){
+        //    console.log(data)
+        // })
         $('#date_input').val('')
         $('#time_input').val('')
         $('#description').val('')

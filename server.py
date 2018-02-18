@@ -1,6 +1,9 @@
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
-import json
+import cgi
+import sqlite3
+conn = sqlite3.connect('appointments.db')
+c = conn.cursor()
 
 PORT_NUMBER = 8080
 
@@ -12,7 +15,8 @@ class myHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path=="/":
 			self.path="/index.html"
-
+			c.executescript('drop table if exists appointments;')
+			c.execute('''CREATE TABLE IF NOT EXISTS appointments (time numeric, date text, description text)''')
 		try:
 			#Check the file extension required and
 			#set the right mime type
@@ -22,8 +26,11 @@ class myHandler(BaseHTTPRequestHandler):
 				mimetype='text/html'
 				sendReply = True
 			if self.path.endswith(".jpg"):
-                mimetype='image/jpg'
-                sendReply = True
+				mimetype='image/jpg'
+				sendReply = True
+			if self.path.endswith(".gif"):
+				mimetype='image/gif'
+				sendReply = True
 			if self.path.endswith(".js"):
 				mimetype='application/javascript'
 				sendReply = True
@@ -41,10 +48,35 @@ class myHandler(BaseHTTPRequestHandler):
 				f.close()
 			return
 
-
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
 
+	#Handler for the POST requests
+	# def updateSqlite(key,value):
+		# c.execute("INSERT INTO appointments (" + key + ") VALUES (" + value + ")")
+
+	def do_POST(self):
+		if self.path=="/send":
+			form = cgi.FieldStorage(
+				fp=self.rfile, 
+				headers=self.headers,
+				environ={'REQUEST_METHOD':'POST',
+				'CONTENT_TYPE':self.headers['Content-Type'],
+			})
+
+			value = ''
+			for key in form.keys():
+				value += (form.getvalue(key) + ',') 
+				# print value
+						
+			# c.execute("insert into appointments (?,?,?) values (?,?,)", (key,value))
+			print('line 72',form.file)
+			print ('line 73',value)
+			self.send_response(200)
+			self.end_headers()
+		return
+
+       
 try:
 	#Create a web server and define the handler to manage the
 	#incoming request
