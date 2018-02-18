@@ -4,23 +4,31 @@ import cgi
 import sqlite3
 conn = sqlite3.connect('appointments.db')
 c = conn.cursor()
+import json
 
-PORT_NUMBER = 8080
+PORT = 8080
 
-#This class will handles any incoming request from
-#the browser 
-class myHandler(BaseHTTPRequestHandler):
-	
-	#Handler for the GET requests
+class myServer(BaseHTTPRequestHandler):
+
+	def _get_all_appts(self):
+		c.execute('select * from appointments')
+		res = c.fetchall()
+		_json = json.dumps(res)
+		print 'This is res from _get_all_appts', res
+		print 'From line 24:  ', _json
+		_data = self.wfile.write(_json)
+		return _data
+
 	def do_GET(self):
 		if self.path=="/":
 			self.path="/index.html"
 			c.executescript('drop table if exists appointments;')
-			c.execute('''CREATE TABLE IF NOT EXISTS appointments (time numeric, date text, description text)''')
-		try:
-			#Check the file extension required and
-			#set the right mime type
+			c.execute('''create table if not exists appointments (date text, time text, description text)''')
+		
+		if self.path=="/getallappts":
+			self._get_all_appts()
 
+		try:
 			sendReply = False
 			if self.path.endswith(".html"):
 				mimetype='text/html'
@@ -37,9 +45,7 @@ class myHandler(BaseHTTPRequestHandler):
 			if self.path.endswith(".css"):
 				mimetype='text/css'
 				sendReply = True
-
 			if sendReply == True:
-				#Open the static file requested and send it
 				f = open(curdir + sep + self.path) 
 				self.send_response(200)
 				self.send_header('Content-type',mimetype)
@@ -51,10 +57,6 @@ class myHandler(BaseHTTPRequestHandler):
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
 
-	#Handler for the POST requests
-	# def updateSqlite(key,value):
-		# c.execute("INSERT INTO appointments (" + key + ") VALUES (" + value + ")")
-
 	def do_POST(self):
 		if self.path=="/send":
 			form = cgi.FieldStorage(
@@ -64,29 +66,26 @@ class myHandler(BaseHTTPRequestHandler):
 				'CONTENT_TYPE':self.headers['Content-Type'],
 			})
 
-			value = ''
+			value = []
 			for key in form.keys():
-				value += (form.getvalue(key) + ',') 
-				# print value
-						
-			# c.execute("insert into appointments (?,?,?) values (?,?,)", (key,value))
-			print('line 72',form.file)
-			print ('line 73',value)
+				value.append( form.getvalue(key))
+				print value
+			c.execute("insert into appointments values (?,?,?)", (value))
+			print ('from line 74 ', form)
+			print ('from line 75 ',value)
 			self.send_response(200)
 			self.end_headers()
+			self._get_all_appts()
 		return
 
-       
 try:
-	#Create a web server and define the handler to manage the
-	#incoming request
-	server = HTTPServer(('', PORT_NUMBER), myHandler)
-	print 'Started httpserver on port ' , PORT_NUMBER
 	
-	#Wait forever for incoming htto requests
+	server = HTTPServer(('', PORT), myServer)
+	print 'Server running on port' , PORT
+
 	server.serve_forever()
 
 except KeyboardInterrupt:
-	print '^C received, shutting down the web server'
+	print 'Server stopped, goodbye!'
 	server.socket.close()
 	

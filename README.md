@@ -1,7 +1,7 @@
 # AT&T Challenge
 
 ## What is it?
-Small appointment app using javascript and python. It is my first time using python 👨🏽‍.
+Small appointment app using JavaScript and Python 3. This is my first time using python 👨🏽‍! I had fun and learned a lot about the language in this exercise.
 
 
 ### Technologies

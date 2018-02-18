@@ -1,48 +1,9 @@
-let newForm = `
+const addBtn = `<button class='btn add_link'>ADD</button>`
 
-    <div class='form-box'>
-            
-        <form onsubmit='return false' class='new-apt-form'>
-            <div class="form-group">
-                <label for="date">Email address</label>
-                <input type="date" class="form-control" id="date_input" aria-describedby="date" >
-            </div>
-            <div class="form-group">
-                <label for="time">Time</label>
-                <input type="time" class="form-control" id="time_input"  >
-            </div>
-            <div class="form-group">
-                <label for="exampleFormControlTextarea1">Description</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary submit_bn2">Submit</button>
-            <p class='options cancel'><a class='cancel-link' href='javascript:void(0)'>Cancel</a></p>
-        </form>
-    <div>
-
-`
-
-let apptTable = `
-
-    <table class='table table-hover'>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Description</th>
-            <tr>
-        </thead>
-        <tbody>
-        
-        </tbody>
-    </table>
-`
-
-let box = `<div>look ma' no hands</div>`
-
-const addBtn = `<a id='add_link 'class='nav-link active add_link' href='javascript:void(0)'> Add</a>`
-
-const newLink = `<a id='new_link' class='nav-link active new_link' href='#newAppointment'> New</a>`
+const newLink = `
+    <a id='new_link' class='nav-link active new_link' href='#newAppointment'>
+        <button class='btn'>NEW</button>
+    </a>`
 
 $(function(){
     const $root = $("#root")
@@ -51,69 +12,177 @@ $(function(){
     const $new = $('.new_link')
     const $add = $('.add_link')
     const $li = $('li')
+    
+    // let list = [['asdfd','time','wtf']]
+    let element = [];
+    // list.forEach((list, i) => {
+    //     // $('tbody').append(`<tr id='row-${i}'></tr>`)
+    //     list.map( item => {
+    //        element.push(`<td>${item}</td>`)
+    //     //    $(`#row-${i}`).append(`<td>${item}</td>`)
+    //     })
 
+         
+    // })
 
-    $root.html(apptTable)
+    console.log([...element])
+    // $('tbody').append(`<tr>${element}</tr>`)
+    
+
+    let getAppointments = () => {
+
+        return $.get('/getallappts').then(res=> {
+            let data = JSON.parse(res)
+            if(data.length === 0) {
+                let noApptMsg = `
+                    <div class='no-appts'>                
+                        <p>No new appointments</p>
+                    </div>
+                `
+                $('.table-div').append(noApptMsg)
+            }
+            else {
+                $('tbody').empty()
+                data.forEach((list) => {
+                    let row = list.map( item => `<td>${item}</td>`)
+                    $('tbody').append(`<tr>${row}</tr>`)
+                })
+            }
+        })
+    }
+    
+    let getOneAppt = (appt) => {
+        $.get(`/getone/:${appt}`).then(res => {
+            let data = JSON.parse(res)
+            if(data.length === 0) {
+                let noApptMsg = `
+                    <div class='no-appts'>                
+                        <p>No new appointments</p>
+                    </div>
+                `
+                $('.table-div').append(noApptMsg)
+            }
+            else {
+                $('tbody').empty()
+                data.forEach((list) => {
+                    let row = list.map( item => `<td>${item}</td>`)
+                    $('tbody').append(`<tr>${row}</tr>`)
+                })
+            }
+        })
+    }
 
     $('.bn1').on('click',function(e){
         e.preventDefault()
+
+        let value = $search.val().trim()
+        console.log(value)
+
+        if ($('div.form-box').hasClass('hidden')){
+            $('div.table-div').removeClass('hidden')
+            return true
+        }
+        else{
+            $('div.form-box').addClass('hidden')
+            $('div.table-div').removeClass('hidden')
+        }
+
+        if (value === ''){
+            getAppointments()
+        }
+        else {
+            getOneAppt(value)
+        }
+
         $search.val('');
-        $root.empty().append(apptTable)
-        
     })
 
     $search.on('keydown', function(e){
+
+        let value = $search.val().trim()
+
         if (e.keyCode === 13) {
+            
+            if ( !$('div.form-box').hasClass('hidden')) {
+                $('div.form-box').addClass('hidden')
+                
+            }
+            
+            if($('.table-div').hasClass('hidden')) {
+                $('.table-div').removeClass('hidden')
+            }
+
+            if (value === '') {
+                getAppointments()
+            }
+            else {
+                getOneAppt(value)
+            }
             $search.val('');
-            $root.empty().append(apptTable)
         }
-
     })
 
-    $li.on('click', '.add_link', function(){ 
-        
-        console.log('event bubbling')
-        $root.html(apptTable)
-        $('li.add').html(newLink)
+    // $li.on('click', '.add_link', function(){ 
+    //     if ($('div.table-div').hasClass('hidden')){
+    //         $('div.form-box').removeClass('hidden')
+    //     }
+    //     else {
+    //         $('div.table-div').addClass('hidden')
+    //         $('div.form-box').removeClass('hidden')
+    //     }
+    //     $('li.add').html(newLink)
 
-    })
+    // })
     
     $li.on('click', '.new_link', function(){ 
-        $root.empty().append(newForm)
+        if ($('div.table-div').hasClass('hidden')){
+            $('div.form-box').removeClass('hidden')
+        }
+        else {
+            $('div.table-div').addClass('hidden')
+            $('div.form-box').removeClass('hidden')
+        }
+      
         $('li.add').html(addBtn)
 
     })
 
-    $root.on('click', '.submit_bn2', function() {
-
+    $('body').on('click', '.add_link', function() {
+        console.log('working')
         const newAppt = {
-            time:$('#date_input').val(),
+            
             date:$('#time_input').val(),
+            time:$('#date_input').val(),
             description:$('#description').val()
         }
-        $.ajax({
-            url:'/send',
-            method:'POST',
-            dataType: 'json',
-            data: newAppt
-        }).then(res => console.log(res))
-        // $.post('/send',newAppt,function(data){
-        //    console.log(data)
-        // })
+       
+        $.post('/send',newAppt,function(data){
+            console.log(JSON.parse(data))
+            $('tbody').empty()
+            JSON.parse(data).forEach((list) => {
+                let row = list.map( item => `<td>${item}</td>`)
+                $('tbody').append(`<tr>${row}</tr>`)
+            })
+
+        })
+        
         $('#date_input').val('')
         $('#time_input').val('')
         $('#description').val('')
 
-        $root.html(apptTable)
+        
         $('li.add').html(newLink)
         console.log('i submited', newAppt)
+        $('.form-box').addClass('hidden')
+        $('.table-div').removeClass('hidden')
     })
 
-    $root.on('click', '.cancel-link', function(){
+    $cancel.on('click', function() {
+        console.log("trying to cancel")
         $('#date_input').val('')
         $('#time_input').val('')
         $('#description').val('')
-        $root.html(apptTable)
+        $('.form-box').addClass('hidden')
         $('li.add').html(newLink)
     })
 })

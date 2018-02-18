@@ -6,7 +6,7 @@
         <meta name='description' content='
             Appointments using a python back end and a javascript front.
         '>
-        
+        <link rel="icon" href="data:;base64,=">
         <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous'>
         <link rel = 'stylesheet'  type ='text/css' href='./main.css' />
     </head>
@@ -14,20 +14,20 @@
         <nav class='welcome-nav navbar '>
 
             <div class='pic-wrapper'>
-                <img  class='schedule'src='/s.jpg' alt='schedule your appt'>
+                <img  class='schedule'src='./s.jpg' alt='schedule your appt'>
             </div>
 
             <h1 class='navbar-brand'>Make a Date</h1>
             
-            <form class="form-inline" onsubmit='return false' >
-                <input class="form-control mr-sm-2" id=search type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 bn1 " type="submit">Search</button>
+            <form class='form-inline' onsubmit='return false' >
+                <input class='form-control mr-sm-2' id=search type='text' placeholder='Search' aria-label='Search'>
+                <button class='btn btn-outline-success my-2 bn1 ' type='submit'>Search</button>
             </form>
 
             <ul  class='navbar-nav'>
 
                 <li class='nav-item add'>
-                    <a class='nav-link active new_link' href='#newAppointment'> New</a>
+                    <a class='nav-link active' href='#newAppointment'> <button class='btn  new_link'>NEW</button></a>
                 </li>
                 
             </ul>
@@ -35,8 +35,40 @@
         </nav>
     
         <div id='root'>
-            <!-- THIS IS WHERE I FLY IN ALL MY HTML -->
+            <div class='table-div hidden'>
+                <table class='table table-hover'>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Description</th>
+                        <tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <div class='form-box hidden'>
+            <form onsubmit='return false' class='new-apt-form'>
+                <div class="form-group">
+                    <label for="date">Email address</label>
+                    <input type="date" class="form-control" id="date_input" aria-describedby="date" >
+                </div>
+                <div class="form-group">
+                    <label for="time">Time</label>
+                    <input type="time" class="form-control" id="time_input"  >
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Description</label>
+                    <textarea class="form-control" id="description" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn cancel-link cancel">Cancel</button>
+            </form>
+        <div>
         <script
             src='http://code.jquery.com/jquery-3.3.1.min.js'
             integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8='
