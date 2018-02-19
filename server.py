@@ -44,8 +44,8 @@ class myServer(BaseHTTPRequestHandler):
 			if self.path.endswith(".jpg"):
 				mimetype='image/jpg'
 				sendReply = True
-			if self.path.endswith(".gif"):
-				mimetype='image/gif'
+			if self.path.endswith(".ico"):
+				mimetype='image/x-icon'
 				sendReply = True
 			if self.path.endswith(".js"):
 				mimetype='application/javascript'
