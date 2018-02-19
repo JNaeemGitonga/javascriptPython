@@ -15,28 +15,9 @@ class myServer(BaseHTTPRequestHandler):
 		c.execute('select * from appointments')
 		res = c.fetchall()
 		_json = json.dumps(res)
-		# print 'This is res from _get_all_appts', res
-		# print 'From line 18:  ', _json
 		self.wfile.write(_json)
 		print 'records sent'
 		return 
-
-	# def _get_one(data):
-	# 	print 'you hit this function'
-	# 	form = cgi.FieldStorage(
-	# 			fp=data.rfile, 
-	# 			headers=data.headers,
-	# 			environ={'REQUEST_METHOD':'POST',
-	# 			'CONTENT_TYPE':data.headers['Content-Type'],
-	# 		})
-
-	# 	value = []
-	# 	for key in form.keys():
-	# 		value.append( form.getvalue(key))
-	# 		print value
-	# 	# c.execute('select * from appointments where description like %', )
-	# 	print 'here is your path', data.path
-
 
 	def do_GET(self):
 		if self.path=="/":
@@ -51,8 +32,6 @@ class myServer(BaseHTTPRequestHandler):
 			_json = json.dumps(res)
 			self.send_response(200)
 			self.end_headers()
-			# print 'This is res from _get_all_appts', res
-			# print 'From line 18:  ', _json
 			self.wfile.write(_json)
 			print 'records sent'
 			return 
@@ -98,11 +77,7 @@ class myServer(BaseHTTPRequestHandler):
 			value = []
 			for key in form.keys():
 				value.append( form.getvalue(key))
-				# print value
-			print value	
 			c.execute("insert into appointments values (?,?,?)", (value))
-			# print ('from line 74 ', form)
-			# print ('from line 75 ',value)
 			self.send_response(200)
 			self.end_headers()
 			self._get_all_appts()
@@ -119,14 +94,10 @@ class myServer(BaseHTTPRequestHandler):
 			for key in form.keys():
 				value = str(form.getvalue(key))
 				t = ('%' + value + '%')
-				print type(t), t
-				# print 'LOOK my value', value
 			
 			c.execute('select * from appointments where description like ?' , (t,))
 			res = c.fetchall()
 			_json = json.dumps(res)
-			# print 'This is res from _get_all_appts', res
-			# print 'From line 18:  ', _json
 			self.send_response(200)
 			self.send_header("Content-type", "application/json")
   			self.end_headers()

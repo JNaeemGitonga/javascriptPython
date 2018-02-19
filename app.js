@@ -50,7 +50,7 @@ $(function(){
                     $('tbody').empty()
                     $('.no-appts').addClass('hidden')
                     data.forEach((list) => {
-                        let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+                        let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
                         $('tbody').append(`<tr>${newRow}</tr>`)
                     })
                 }
