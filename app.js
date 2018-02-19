@@ -32,62 +32,64 @@ $(function(){
             }
     }
 
-    let getAppointments = () => {
+    let getAppointments = (term = '') => {
 
-        return $.get('/getallappts').then(res=> {
-            console.log(res)
-            let data = JSON.parse(res)
-
-            console.log(data)
-            if(res.length === 0) {
-                let noApptMsg = `
-                    <div class='no-appts'>                
-                        <p>No new appointments</p>
-                    </div>
-                `
-                $('.table-div').append(noApptMsg)
-            }
-            else {
-                $('tbody').empty()
-                data.forEach((list) => {
-                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-                    $('tbody').append(`<tr>${row}</tr>`)
-                })
-            }
-        }).catch(err => {
-            console.error(err)
-        })
+        if (term.length === 0) {
+            return $.get('/getallappts').then(res=> {
+                console.log(res)
+                if(!res) return
+                let data = JSON.parse(res)
+    
+                console.log(data)
+                if(res.length === 0) {
+                    let noApptMsg = `
+                        <div class='no-appts'>                
+                            <p>No new appointments</p>
+                        </div>
+                    `
+                    $('.table-div').append(noApptMsg)
+                }
+                else {
+                    $('tbody').empty()
+                    data.forEach((list) => {
+                        let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+                        $('tbody').append(`<tr>${row}</tr>`)
+                    })
+                }
+            }).catch(err => {
+                console.error(err)
+            })
+        }else {
+            $.post(`/getOne`,{search:term}).then(res => {
+                if(!res) return
+                let data = JSON.parse(res)
+                if(res.length === 0) {
+                    let noApptMsg = `
+                        <div class='no-appts'>                
+                            <p>No new appointments</p>
+                        </div>
+                    `
+                    $('.table-div').append(noApptMsg)
+                }
+                else {
+                    $('tbody').empty()
+                    data.forEach((list) => {
+                        let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+                        $('tbody').append(`<tr>${row}</tr>`)
+                    })
+                }
+            }).catch(err => {
+                console.error(err)
+            })
+        }
+       
     }
     
-    let getOneAppt = (appt) => {
-        
-        $.post(`/getOne`,{search:appt}).then(res => {
-            let data = JSON.parse(res)
-            if(res.length === 0) {
-                let noApptMsg = `
-                    <div class='no-appts'>                
-                        <p>No new appointments</p>
-                    </div>
-                `
-                $('.table-div').append(noApptMsg)
-            }
-            else {
-                $('tbody').empty()
-                data.forEach((list) => {
-                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-                    $('tbody').append(`<tr>${row}</tr>`)
-                })
-            }
-        }).catch(err => {
-            console.error(err)
-        })
-    }
 
     $('.bn1').on('click',function(e){
         e.preventDefault()
 
         let value = $search.val().trim()
-        console.log(typeof value, value.length)
 
         if ($('div.form-box').hasClass('hidden')){
             $('div.table-div').removeClass('hidden')
@@ -98,11 +100,10 @@ $(function(){
         }
 
         if (value.length === 0){
-            console.log('doin it')
             getAppointments()
         }
         else {
-            getOneAppt(value)
+            getAppointments(value)
         }
 
         $search.val('');
@@ -128,7 +129,7 @@ $(function(){
                 getAppointments()
             }
             else {
-                getOneAppt(value)
+                getAppointments(value)
             }
             $search.val('');
         }
@@ -148,7 +149,6 @@ $(function(){
     })
 
     $('body').on('click', '.add_link', function() {
-        console.log('working')
         const newAppt = {
             
             date:$('#time_input').val(),
@@ -159,7 +159,6 @@ $(function(){
         $.post('/send',newAppt,function(data){
             $('tbody').empty()
             let obj = JSON.parse(data)
-            console.log(obj)
             obj.forEach((list) => {
                 let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
                 $('tbody').append(`<tr>${newRow}</tr>`)
@@ -173,13 +172,11 @@ $(function(){
 
         
         $('li.add').html(newLink)
-        console.log('i submited', newAppt)
         $('.form-box').addClass('hidden')
         $('.table-div').removeClass('hidden')
     })
 
     $cancel.on('click', function() {
-        console.log("trying to cancel")
         $('#date_input').val('')
         $('#time_input').val('')
         $('#description').val('')

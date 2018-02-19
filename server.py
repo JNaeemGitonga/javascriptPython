@@ -40,7 +40,7 @@ class myServer(BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path=="/":
 			self.path="/index.html"
-			# c.executescript('drop table if exists appointments;')
+			c.executescript('drop table if exists appointments;')
 			c.execute('''create table if not exists appointments (date text, time text, description text)''')
 		
 		if self.path=="/getallappts":
@@ -115,7 +115,7 @@ class myServer(BaseHTTPRequestHandler):
 			# print 'This is res from _get_all_appts', res
 			# print 'From line 18:  ', _json
 			# self.wfile.write(_json)
-			# print "I'm ya huckleberry", res
+			print "I'm ya huckleberry", res
 		return
 
 try:
