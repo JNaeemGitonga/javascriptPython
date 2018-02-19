@@ -18,6 +18,7 @@ class myServer(BaseHTTPRequestHandler):
 		# print 'This is res from _get_all_appts', res
 		# print 'From line 18:  ', _json
 		self.wfile.write(_json)
+		print 'records sent'
 		return 
 
 	# def _get_one(data):
@@ -44,6 +45,7 @@ class myServer(BaseHTTPRequestHandler):
 			c.execute('''create table if not exists appointments (date text,description text, time text )''')
 		
 		if self.path=="/getallappts":
+			print 'getting all records'
 			self._get_all_appts()
 
 		try:
@@ -116,6 +118,9 @@ class myServer(BaseHTTPRequestHandler):
 			_json = json.dumps(res)
 			# print 'This is res from _get_all_appts', res
 			# print 'From line 18:  ', _json
+			self.send_response(200)
+			self.send_header("Content-type", "application/json")
+  			self.end_headers()
 			self.wfile.write(_json)
 			print "I'm ya huckleberry", res
 		return

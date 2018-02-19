@@ -40,9 +40,8 @@ $(function(){
             return $.get('/getallappts').then(res=> {
                 console.log(res)
                 if(!res) return
-                let data = JSON.parse(res)
+                // let data = JSON.parse(res)
     
-                console.log(data)
                 if(res.length === 0) {
                     let noApptMsg = `
                         <div class='no-appts'>                
@@ -53,7 +52,7 @@ $(function(){
                 }
                 else {
                     $('tbody').empty()
-                    data.forEach((list) => {
+                    res.forEach((list) => {
                         let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
                         $('tbody').append(`<tr>${row}</tr>`)
                     })
@@ -64,7 +63,7 @@ $(function(){
         }else {
             $.post(`/getOne`,{search:term}).then(res => {
                 if(!res) return
-                let data = JSON.parse(res)
+                console.log(res)
                 if(res.length === 0) {
                     let noApptMsg = `
                         <div class='no-appts'>                
@@ -75,9 +74,9 @@ $(function(){
                 }
                 else {
                     $('tbody').empty()
-                    data.forEach((list) => {
-                        let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-                        $('tbody').append(`<tr>${row}</tr>`)
+                    res.forEach((list) => {
+                        let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
+                        $('tbody').append(`<tr>${newRow}</tr>`)
                     })
                 }
             }).catch(err => {
