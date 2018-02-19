@@ -149,13 +149,22 @@ $(function(){
     })
 
     $('body').on('click', '.add_link', function() {
+        
         const newAppt = {
-            
+                    
             date:$('#time_input').val(),
             time:$('#date_input').val(),
             description:$('#description').val().trim()
         }
-       
+
+        if (newAppt.date === '' || newAppt.time === ''){
+            alert('Date and Time should be completely filled in')
+            return
+        }else if(newAppt.description === '') {
+            alert('Please include a valid description')
+            return
+        }
+
         $.post('/send',newAppt,function(data){
             $('tbody').empty()
             let obj = JSON.parse(data)
