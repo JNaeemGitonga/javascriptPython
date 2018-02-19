@@ -154,16 +154,29 @@ $(function(){
 
         const newAppt = {
                     
-            date:$('#time_input').val(),
-            time:$('#date_input').val(),
+            date:$('#date_input').val(),
+            time:$('#time_input').val(),
             description:$('#description').val().trim()
         }
 
-        if (newAppt.date === '' || newAppt.time === ''){
-            alert('Date and Time should be completely filled in')
+        if (newAppt.date === '' ){
+            $('.date').removeClass('not-visible')
+            setTimeout(function(){
+                $('.date').addClass('not-visible')},3000)
             return
-        }else if(newAppt.description === '') {
-            alert('Please include a valid description')
+        }
+
+        if(newAppt.time === '') {
+            $('.time').removeClass('not-visible')
+            setTimeout(function(){
+                $('.time').addClass('not-visible')},3000)
+            return
+        }
+
+        if(newAppt.description === '') {
+            $('.description').removeClass('not-visible')
+            setTimeout(function(){
+                $('.description').addClass('not-visible')},3000)
             return
         }
 

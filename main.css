@@ -83,3 +83,11 @@ div.table-div {
     
 }
 
+.not-visible {
+    visibility:hidden;
+    color:red;
+}
+
+.error-box {
+    text-align:center;
+}

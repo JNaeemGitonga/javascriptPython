@@ -54,16 +54,19 @@
         <div class='form-box hidden'>
             <form onsubmit='return false' class='new-apt-form'>
                 <div class="form-group">
-                    <label for="date">Email address</label>
+                    <label for="date">Date</label>
                     <input type="date" class="form-control" id="date_input" aria-describedby="date" >
+                    <div class='error-box'><p class="not-visible date">Please fill in this section completely to continue</p></div>
                 </div>
                 <div class="form-group">
                     <label for="time">Time</label>
                     <input type="time" class="form-control" id="time_input"  >
+                    <div class='error-box'><p class="not-visible time">Please fill in this section completely to continue</p></div>
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Description</label>
                     <textarea class="form-control" id="description" rows="3"></textarea>
+                    <div class='error-box'><p class="not-visible description">Please fill in this section completely to continue</p></div>
                 </div>
                 
                 <button type="submit" class="btn cancel-link cancel">Cancel</button>
