@@ -46,7 +46,16 @@ class myServer(BaseHTTPRequestHandler):
 		
 		if self.path=="/getallappts":
 			print 'getting all records'
-			self._get_all_appts()
+			c.execute('select * from appointments')
+			res = c.fetchall()
+			_json = json.dumps(res)
+			self.send_response(200)
+			self.end_headers()
+			# print 'This is res from _get_all_appts', res
+			# print 'From line 18:  ', _json
+			self.wfile.write(_json)
+			print 'records sent'
+			return 
 
 		try:
 			sendReply = False

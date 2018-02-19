@@ -38,23 +38,20 @@ $(function(){
 
         if (term.length === 0) {
             return $.get('/getallappts').then(res=> {
-                console.log(res)
+                console.log(typeof res, res)
+
                 if(!res) return
-                // let data = JSON.parse(res)
+                let data = JSON.parse(res)
     
-                if(res.length === 0) {
-                    let noApptMsg = `
-                        <div class='no-appts'>                
-                            <p>No new appointments</p>
-                        </div>
-                    `
-                    $('.table-div').append(noApptMsg)
+                if(data.length === 0) {
+                    $('.no-appts').removeClass('hidden')
                 }
                 else {
                     $('tbody').empty()
-                    res.forEach((list) => {
+                    $('.no-appts').addClass('hidden')
+                    data.forEach((list) => {
                         let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-                        $('tbody').append(`<tr>${row}</tr>`)
+                        $('tbody').append(`<tr>${newRow}</tr>`)
                     })
                 }
             }).catch(err => {
@@ -65,15 +62,11 @@ $(function(){
                 if(!res) return
                 console.log(res)
                 if(res.length === 0) {
-                    let noApptMsg = `
-                        <div class='no-appts'>                
-                            <p>No new appointments</p>
-                        </div>
-                    `
-                    $('.table-div').append(noApptMsg)
+                    $('.no-appts').removeClass('hidden')
                 }
                 else {
                     $('tbody').empty()
+                    $('.no-appts').addClass('hidden')
                     res.forEach((list) => {
                         let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
                         $('tbody').append(`<tr>${newRow}</tr>`)
@@ -182,6 +175,7 @@ $(function(){
         $.post('/send',newAppt,function(data){
             $('tbody').empty()
             let obj = JSON.parse(data)
+            $('.no-appts').addClass('hidden')
             obj.forEach((list) => {
                 let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
                 $('tbody').append(`<tr>${newRow}</tr>`)
