@@ -60,7 +60,8 @@ $(function(){
     }
     
     let getOneAppt = (appt) => {
-        $.get(`/getone/:${appt}`).then(res => {
+        
+        $.post(`/getOne`,{search:appt}).then(res => {
             let data = JSON.parse(res)
             if(res.length === 0) {
                 let noApptMsg = `
@@ -152,7 +153,7 @@ $(function(){
             
             date:$('#time_input').val(),
             time:$('#date_input').val(),
-            description:$('#description').val()
+            description:$('#description').val().trim()
         }
        
         $.post('/send',newAppt,function(data){

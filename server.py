@@ -5,6 +5,7 @@ import sqlite3
 conn = sqlite3.connect('appointments.db')
 c = conn.cursor()
 import json
+import urlparse
 
 PORT = 8080
 
@@ -14,15 +15,32 @@ class myServer(BaseHTTPRequestHandler):
 		c.execute('select * from appointments')
 		res = c.fetchall()
 		_json = json.dumps(res)
-		print 'This is res from _get_all_appts', res
-		print 'From line 18:  ', _json
+		# print 'This is res from _get_all_appts', res
+		# print 'From line 18:  ', _json
 		self.wfile.write(_json)
 		return 
+
+	# def _get_one(data):
+	# 	print 'you hit this function'
+	# 	form = cgi.FieldStorage(
+	# 			fp=data.rfile, 
+	# 			headers=data.headers,
+	# 			environ={'REQUEST_METHOD':'POST',
+	# 			'CONTENT_TYPE':data.headers['Content-Type'],
+	# 		})
+
+	# 	value = []
+	# 	for key in form.keys():
+	# 		value.append( form.getvalue(key))
+	# 		print value
+	# 	# c.execute('select * from appointments where description like %', )
+	# 	print 'here is your path', data.path
+
 
 	def do_GET(self):
 		if self.path=="/":
 			self.path="/index.html"
-			c.executescript('drop table if exists appointments;')
+			# c.executescript('drop table if exists appointments;')
 			c.execute('''create table if not exists appointments (date text, time text, description text)''')
 		
 		if self.path=="/getallappts":
@@ -56,7 +74,7 @@ class myServer(BaseHTTPRequestHandler):
 
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
-
+	
 	def do_POST(self):
 		if self.path=="/send":
 			form = cgi.FieldStorage(
@@ -69,20 +87,40 @@ class myServer(BaseHTTPRequestHandler):
 			value = []
 			for key in form.keys():
 				value.append( form.getvalue(key))
-				print value
+				# print value
+				
 			c.execute("insert into appointments values (?,?,?)", (value))
-			print ('from line 74 ', form)
-			print ('from line 75 ',value)
+			# print ('from line 74 ', form)
+			# print ('from line 75 ',value)
 			self.send_response(200)
 			self.end_headers()
 			self._get_all_appts()
+
+		if self.path=='/getOne':
+			form = cgi.FieldStorage(
+				fp=self.rfile, 
+				headers=self.headers,
+				environ={'REQUEST_METHOD':'POST',
+				'CONTENT_TYPE':self.headers['Content-Type'],
+			})
+
+			value = []
+			for key in form.keys():
+				value.append("%" + form.getvalue(key) + "%")
+				# print 'LOOK my value', value
+			
+			c.execute('select * from appointments where description=?' , value)
+			res = c.fetchall()
+			# _json = json.dumps(res)
+			# print 'This is res from _get_all_appts', res
+			# print 'From line 18:  ', _json
+			# self.wfile.write(_json)
+			# print "I'm ya huckleberry", res
 		return
 
 try:
-	
 	server = HTTPServer(('', PORT), myServer)
 	print 'Server running on port' , PORT
-
 	server.serve_forever()
 
 except KeyboardInterrupt:
