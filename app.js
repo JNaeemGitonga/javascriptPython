@@ -6,52 +6,38 @@ const newLink = `
     </a>`
 
 $(function(){
+
     const $root = $("#root")
     const $search = $('#search')
     const $cancel = $('.cancel')
     const $new = $('.new_link')
     const $add = $('.add_link')
     const $li = $('li')
-    
-    // let _handleTable = obj => {
-    //     let data = JSON.parse(obj)
-    //     if(data.length === 0) {
-    //         let noApptMsg = `
-    //             <div class='no-appts'>                
-    //                 <p>No new appointments</p>
-    //             </div>
-    //         `
-    //         $('.table-div').append(noApptMsg)
-    //     }
-    //     else {
-    //         $('tbody').empty()
-    //         data.forEach((list) => {
-    //             let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-    //             $('tbody').append(`<tr>${row}</tr>`)
-    //         })
-    //     }
-    // }
-
-    //  THE FORMER IS FOR REFACTORING PURPOSES
-
+    const $noAppts = $('.no-appts')
+    const $tbody = $('tbody')
+    const $form = $('div.form-box') 
+    const $divNtable =$('div.table-div')
+   
     let getAppointments = (term = '') => {
 
         if (term.length === 0) {
             return $.get('/getallappts').then(res=> {
-                console.log(typeof res, res)
 
                 if(!res) return
                 let data = JSON.parse(res)
     
                 if(data.length === 0) {
-                    $('.no-appts').removeClass('hidden')
+                    $tbody.empty()
+                    $noAppts.removeClass('hidden')
+                    return
                 }
                 else {
-                    $('tbody').empty()
-                    $('.no-appts').addClass('hidden')
+                    
+                    $tbody.empty()
+                    $noAppts.addClass('hidden')
                     data.forEach((list) => {
                         let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
-                        $('tbody').append(`<tr>${newRow}</tr>`)
+                        $tbody.append(`<tr>${newRow}</tr>`)
                     })
                 }
             }).catch(err => {
@@ -59,17 +45,19 @@ $(function(){
             })
         }else {
             $.post(`/getOne`,{search:term}).then(res => {
+
                 if(!res) return
-                console.log(res)
+
                 if(res.length === 0) {
-                    $('.no-appts').removeClass('hidden')
+                    $tbody.empty()
+                    $noAppts.removeClass('hidden')
                 }
                 else {
-                    $('tbody').empty()
-                    $('.no-appts').addClass('hidden')
+                    $tbody.empty()
+                    $noAppts.addClass('hidden')
                     res.forEach((list) => {
                         let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
-                        $('tbody').append(`<tr>${newRow}</tr>`)
+                        $tbody.append(`<tr>${newRow}</tr>`)
                     })
                 }
             }).catch(err => {
@@ -85,12 +73,12 @@ $(function(){
 
         let value = $search.val().trim()
 
-        if ($('div.form-box').hasClass('hidden')){
-            $('div.table-div').removeClass('hidden')
+        if ($form.hasClass('hidden')){
+            $divNtable.removeClass('hidden')
         }
         else{
-            $('div.form-box').addClass('hidden')
-            $('div.table-div').removeClass('hidden')
+            $form.addClass('hidden')
+            $divNtable.removeClass('hidden')
         }
 
         if (value.length === 0){
@@ -109,8 +97,8 @@ $(function(){
 
         if (e.keyCode === 13) {
             
-            if ( !$('div.form-box').hasClass('hidden')) {
-                $('div.form-box').addClass('hidden')
+            if ( !$form.hasClass('hidden')) {
+                $form.addClass('hidden')
                 
             }
             
@@ -130,12 +118,12 @@ $(function(){
     })
 
     $li.on('click', '.new_link', function(){ 
-        if ($('div.table-div').hasClass('hidden')){
-            $('div.form-box').removeClass('hidden')
+        if ($divNtable.hasClass('hidden')){
+            $form.removeClass('hidden')
         }
         else {
-            $('div.table-div').addClass('hidden')
-            $('div.form-box').removeClass('hidden')
+            $divNtable.addClass('hidden')
+            $form.removeClass('hidden')
         }
       
         $('li.add').html(addBtn)
@@ -173,12 +161,12 @@ $(function(){
         }
 
         $.post('/send',newAppt,function(data){
-            $('tbody').empty()
+            $tbody.empty()
             let obj = JSON.parse(data)
-            $('.no-appts').addClass('hidden')
+            $noAppts.addClass('hidden')
             obj.forEach((list) => {
                 let newRow = `<td>${list[0]}</td><td>${list[2]}</td><td>${list[1]}</td>`
-                $('tbody').append(`<tr>${newRow}</tr>`)
+                $tbody.append(`<tr>${newRow}</tr>`)
             })
 
         })
@@ -194,11 +182,13 @@ $(function(){
     })
 
     $cancel.on('click', function() {
+
         $('#date_input').val('')
         $('#time_input').val('')
         $('#description').val('')
         $('.form-box').addClass('hidden')
         $('li.add').html(newLink)
+        
     })
 })
 

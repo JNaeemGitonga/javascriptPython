@@ -89,7 +89,6 @@ class myServer(BaseHTTPRequestHandler):
 				environ={'REQUEST_METHOD':'POST',
 				'CONTENT_TYPE':self.headers['Content-Type'],
 			})
-
 			
 			for key in form.keys():
 				value = str(form.getvalue(key))
