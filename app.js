@@ -13,24 +13,26 @@ $(function(){
     const $add = $('.add_link')
     const $li = $('li')
     
-    let _handleTable = obj => {
-        let data = JSON.parse(obj)
-            if(data.length === 0) {
-                let noApptMsg = `
-                    <div class='no-appts'>                
-                        <p>No new appointments</p>
-                    </div>
-                `
-                $('.table-div').append(noApptMsg)
-            }
-            else {
-                $('tbody').empty()
-                data.forEach((list) => {
-                    let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
-                    $('tbody').append(`<tr>${row}</tr>`)
-                })
-            }
-    }
+    // let _handleTable = obj => {
+    //     let data = JSON.parse(obj)
+    //     if(data.length === 0) {
+    //         let noApptMsg = `
+    //             <div class='no-appts'>                
+    //                 <p>No new appointments</p>
+    //             </div>
+    //         `
+    //         $('.table-div').append(noApptMsg)
+    //     }
+    //     else {
+    //         $('tbody').empty()
+    //         data.forEach((list) => {
+    //             let newRow = `<td>${list[2]}</td><td>${list[0]}</td><td>${list[1]}</td>`
+    //             $('tbody').append(`<tr>${row}</tr>`)
+    //         })
+    //     }
+    // }
+
+    //  THE FORMER IS FOR REFACTORING PURPOSES
 
     let getAppointments = (term = '') => {
 
@@ -149,7 +151,7 @@ $(function(){
     })
 
     $('body').on('click', '.add_link', function() {
-        
+
         const newAppt = {
                     
             date:$('#time_input').val(),
