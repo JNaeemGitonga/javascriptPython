@@ -41,7 +41,7 @@ class myServer(BaseHTTPRequestHandler):
 		if self.path=="/":
 			self.path="/index.html"
 			c.executescript('drop table if exists appointments;')
-			c.execute('''create table if not exists appointments (date text, time text, description text)''')
+			c.execute('''create table if not exists appointments (date text,description text, time text )''')
 		
 		if self.path=="/getallappts":
 			self._get_all_appts()
@@ -88,7 +88,7 @@ class myServer(BaseHTTPRequestHandler):
 			for key in form.keys():
 				value.append( form.getvalue(key))
 				# print value
-				
+			print value	
 			c.execute("insert into appointments values (?,?,?)", (value))
 			# print ('from line 74 ', form)
 			# print ('from line 75 ',value)
@@ -104,17 +104,19 @@ class myServer(BaseHTTPRequestHandler):
 				'CONTENT_TYPE':self.headers['Content-Type'],
 			})
 
-			value = []
+			
 			for key in form.keys():
-				value.append("%" + form.getvalue(key) + "%")
+				value = str(form.getvalue(key))
+				t = ('%' + value + '%')
+				print type(t), t
 				# print 'LOOK my value', value
 			
-			c.execute('select * from appointments where description=?' , value)
+			c.execute('select * from appointments where description like ?' , (t,))
 			res = c.fetchall()
-			# _json = json.dumps(res)
+			_json = json.dumps(res)
 			# print 'This is res from _get_all_appts', res
 			# print 'From line 18:  ', _json
-			# self.wfile.write(_json)
+			self.wfile.write(_json)
 			print "I'm ya huckleberry", res
 		return
 
