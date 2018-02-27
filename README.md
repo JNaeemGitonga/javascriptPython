@@ -16,8 +16,9 @@ Small appointment app using JavaScript and Python 3. This is my first time using
 
 ### Getting Started
 
+** Make sure you have Python installed on your local machine
+
 1. clone this repo to your local machine.
-2. `$ pip install -r requirements.txt`
 3. `$ python server.py`
 4. in your browser go to `http://localhost:8080`
 
